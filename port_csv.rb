@@ -1,6 +1,7 @@
 require 'csv'
 require 'json'
-require_relative './marvel-wikia-data.csv'
-require_relative './dc-wikia-data.csv'
+require 'pry'
 
-CSV.parse(data).to_json
+csv = CSV.table('./genius_hip_hop_lyrics.csv')
+
+pry.start
