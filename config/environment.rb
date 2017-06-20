@@ -6,4 +6,4 @@ require_relative "../app/models/port_csv.rb"
 require_relative "../app/models/candidate.rb"
 require_relative "../app/models/artist.rb"
 
-DB = SQLite3::Database.new "lyrics.db"
+DB ||= SQLite3::Database.new("../db/lyrics.db")

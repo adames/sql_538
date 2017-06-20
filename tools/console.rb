@@ -1,4 +1,5 @@
 require_relative "../config/environment.rb"
 
-records = Artist.get_records_from_csv
+#records = Artist.insert_artists_into_db
+artists = Artist.insert_artists_into_db
 pry.start
