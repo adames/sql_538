@@ -1,14 +1,20 @@
 class Lyric
 
-  def self.sql_query
+  def self.sql_insert_query
     sql = <<-SQL
     INSERT INTO lyrics (line, sentiment, theme)
     VALUES (?, ?, ?)
     SQL
   end
 
+  def self.sql_select_query(table)
+    sql = <<-SQL
+    SELECT id FROM #{table} WHERE title = ?
+    SQL
+  end
+
   def self.get_formatted_text(value)
-    value.downcase.gsub(/['"]/, "'" => "\''", '"' => '\""')
+    value.to_s.downcase.gsub(/['"]/, "'" => "\''", '"' => '\""')
   end
 
   def self.get_all_lyrics
@@ -16,23 +22,20 @@ class Lyric
       [self.get_formatted_text(record[:line]),
       self.get_formatted_text(record[:sentiment]),
       self.get_formatted_text(record[:theme]),
-      record[:id]]
+      self.get_formatted_text(record[:song])]
     end.uniq  { |values| values.first }
   end
 
-  def self.update_record_hash_with_database_id(sql_id, hash_id)
-    RECORDS.each_with_index do |record, index|
-      if record[:id] == hash_id
-        RECORDS[index][:lyric_id] = sql_id
-      end
-    end
+  def self.create_songs_lyrics_table_record(song_id, lyric_id)
+    DB.execute("INSERT INTO songs_lyrics (song_id, lyric_id) VALUES (#{song_id}, #{lyric_id})")
   end
 
   def self.insert_lyrics_into_db
     self.get_all_lyrics.each do |value_array|
-      DB.execute(self.sql_query, value_array[0..2])
+      DB.execute(self.sql_insert_query, value_array[0..2])
       lyric_id = DB.execute("SELECT last_insert_rowid()")[0][0]
-      self.update_record_hash_with_database_id(lyric_id, value_array[3])
+      song_id = DB.execute(self.sql_select_query("songs"),value_array[3])[0][0]
+      create_songs_lyrics_table_record(song_id, lyric_id)
     end
   end
 

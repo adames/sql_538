@@ -1,9 +1,15 @@
 class Song
 
-  def self.sql_query
+  def self.sql_insert_query
     sql = <<-SQL
-    INSERT INTO songs (title, release_date)
-    VALUES (?, ?)
+    INSERT INTO songs (title, release_date, artist_id, candidate_id)
+    VALUES (?, ?, ?, ?)
+    SQL
+  end
+
+  def self.sql_select_query(table)
+    sql = <<-SQL
+    SELECT id FROM #{table} WHERE name = ?
     SQL
   end
 
@@ -15,23 +21,16 @@ class Song
   RECORDS.map do |record|
       [self.get_formatted_text(record[:song]),
       record[:album_release_date],
-      record[:id]]
+      self.get_formatted_text(record[:candidate]),
+      self.get_formatted_text(record[:artist])]
     end.uniq { |values| values.first }
-  end
-
-  def self.update_record_hash_with_database_id(sql_id, hash_id)
-    RECORDS.each_with_index do |record, index|
-      if record[:id] == hash_id
-        RECORDS[index][:song_id] = sql_id
-      end
-    end
   end
 
   def self.insert_songs_into_db
     self.get_all_songs.each do |value_array|
-      DB.execute(self.sql_query, value_array[0..1])
-      song_id = DB.execute("SELECT last_insert_rowid()")[0][0]
-      self.update_record_hash_with_database_id(song_id, value_array[2])
+      candidate_id = DB.execute(self.sql_select_query("candidates"),value_array[2])
+      artist_id = DB.execute(self.sql_select_query("artists"),value_array[3])
+      DB.execute(self.sql_insert_query, value_array[0], value_array[1], artist_id, candidate_id)
     end
   end
 
