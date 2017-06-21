@@ -13,4 +13,6 @@ Artist.insert_artists_into_db
 Song.insert_songs_into_db
 Lyric.insert_lyrics_into_db
 
+# Query on the pry. Pre-made queries in queries.rb
+
 Pry.start
