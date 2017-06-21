@@ -7,6 +7,7 @@ require_relative "../app/models/candidate.rb"
 require_relative "../app/models/artist.rb"
 require_relative "../app/models/lyric.rb"
 require_relative "../app/models/song.rb"
+require_relative "../app/models/tables.rb"
 
 DB ||= SQLite3::Database.new("db/lyrics.db")
 RECORDS ||= PortCsv.new.get_records
