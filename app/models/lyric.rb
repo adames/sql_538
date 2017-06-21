@@ -39,8 +39,4 @@ class Lyric
     end
   end
 
-  # def self.create_songs_lyrics_table_record
-  #   lyric_id =
-  # end
-
 end

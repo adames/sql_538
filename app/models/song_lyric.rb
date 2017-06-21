@@ -17,13 +17,8 @@ class SongLyric
     value.to_s.downcase.gsub(/['"]/, "'" => "\''", '"' => '\""')
   end
 
-  def self.get_song_id_and_lyric_id(record)
-
-  end
-
   def self.get_all_records
     RECORDS.map do |record|
-
     end
   end
 
