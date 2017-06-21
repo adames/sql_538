@@ -7,16 +7,18 @@ class Artist
     SQL
   end
 
+  def self.get_formatted_artist_name(record)
+    record[:artist].downcase.gsub(/['"]/, "'" => "\''", '"' => '\""')
+  end
+
   def self.get_all_artists
-    data = PortCsv.new
-    data.get_records.map do |record|
-      record[:artist].downcase
+    RECORDS.map do |record|
+      self.get_formatted_artist_name(record)
     end.uniq
   end
 
   def self.insert_artists_into_db
     self.get_all_artists.each do |artist|
-      binding.pry
       DB.execute(self.sql_query(artist))
     end
   end
