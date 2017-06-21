@@ -15,7 +15,7 @@ class Artist
     RECORDS.map do |record|
       [self.get_formatted_artist_name(record),
       record[:id]]
-    end.uniq
+    end.uniq  { |values| values.first }
   end
 
   def self.update_record_hash_with_database_id(sql_id, hash_id)

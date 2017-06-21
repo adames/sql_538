@@ -16,7 +16,7 @@ class Song
       [self.get_formatted_text(record[:song]),
       record[:album_release_date],
       record[:id]]
-    end.uniq
+    end.uniq { |values| values.first }
   end
 
   def self.update_record_hash_with_database_id(sql_id, hash_id)
