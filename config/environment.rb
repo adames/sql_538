@@ -10,4 +10,3 @@ require_relative "../app/models/song.rb"
 
 DB ||= SQLite3::Database.new("db/lyrics.db")
 RECORDS ||= PortCsv.new.get_records
-Pry.start

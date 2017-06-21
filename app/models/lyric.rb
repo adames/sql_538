@@ -20,26 +20,24 @@ class Lyric
     end.uniq
   end
 
-  def self.update_record_hash_with_database_id(lyric_id)
+  def self.update_record_hash_with_database_id(sql_id, hash_id)
     RECORDS.each_with_index do |record, index|
-      if record[:id] == @@id
-        RECORDS[index][:lyric_id] = lyric_id
+      if record[:id] == hash_id
+        RECORDS[index][:lyric_id] = sql_id
       end
     end
   end
 
   def self.insert_lyrics_into_db
     self.get_all_lyrics.each do |value_array|
-      DB.execute(self.sql_query, value_array)
+      DB.execute(self.sql_query, value_array[0..2])
       lyric_id = DB.execute("SELECT last_insert_rowid()")[0][0]
-      self.update_record_hash_with_database_id(lyric_id)
-      binding.pry
+      self.update_record_hash_with_database_id(lyric_id, value_array[3])
     end
   end
 
   # def self.create_songs_lyrics_table_record
   #   lyric_id =
-  #   binding.pry
   # end
 
 end
